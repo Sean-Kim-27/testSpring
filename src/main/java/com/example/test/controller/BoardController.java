@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class BoardController {
     private final BoardService boardService;
 
