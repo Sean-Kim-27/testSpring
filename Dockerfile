@@ -1,4 +1,4 @@
-FROM openjdk:25-jdk-slim
+FROM openjdk:25-jdk-temurin
 
 WORKDIR /app
 
