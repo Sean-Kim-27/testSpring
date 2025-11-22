@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins ={"http://localhost:3000", "https://test-react-delta-woad.vercel.app"})
 public class BoardController {
     private final BoardService boardService;
 
