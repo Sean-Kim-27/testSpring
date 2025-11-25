@@ -22,7 +22,9 @@ public class Board {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private String writer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private LocalDateTime createdAt;
 
