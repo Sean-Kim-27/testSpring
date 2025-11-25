@@ -42,6 +42,7 @@ public class SecurityConfig {
                 // 4. 출입 명부 (여기서 막는 거다)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // 로그인, 회원가입은 프리패스
+                        .requestMatchers("/health").permitAll()
                         .requestMatchers("/api/boards").authenticated() // 게시판은 인증 필요
                         .anyRequest().permitAll() // 나머지는 일단 허용 (개발 편하게)
                 )
