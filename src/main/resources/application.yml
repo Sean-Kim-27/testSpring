@@ -11,3 +11,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  # 환경변수 JWT_SECRET_KEY가 있으면 그거 쓰고, 없으면 뒤에 있는 기본값(로컬용)
+  secret: ${JWT_SECRET_KEY:v3rY_s3cr3t_k3y_f0r_l0c4l_d3v_0nly_d0_n0t_us3_1n_pr0d}
