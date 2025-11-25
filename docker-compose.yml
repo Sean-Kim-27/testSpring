@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # 1. 데이터베이스 (PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: test-db-local
+    environment:
+      POSTGRES_USER: test       # 니가 쓸 아이디 (맘대로 바꿔도 됨)
+      POSTGRES_PASSWORD: test  # 니가 쓸 비번 (맘대로 바꿔도 됨)
+      POSTGRES_DB: testdb          # DB 이름
+    ports:
+      - "5433:5432" # 내 컴퓨터 5432 포트랑 연결
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # 데이터 안 날아가게 저장소 확보
+
+  # 2. 백엔드 서버 (Spring Boot)
+  app:
+    container_name: game-server-local
+    build: . # 현재 폴더에 있는 Dockerfile로 빌드해라
+    ports:
+      - "8080:8080" # 내 컴퓨터 8080이랑 연결
+    environment:
+      # ★★★ 여기가 핵심이다. localhost가 아니라 'db'라고 쓴다 ★★★
+      # 도커 내부에서는 서비스 이름(db)으로 통신함
+      DB_URL: jdbc:postgresql://db:5432/gamedb
+      DB_USERNAME: seankim
+      DB_PASSWORD: rjsgh327
+    depends_on:
+      - db # DB가 먼저 켜져야 나도 켜진다
+
+volumes:
+  postgres_data:
