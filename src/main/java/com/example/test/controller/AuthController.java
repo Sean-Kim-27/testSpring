@@ -6,6 +6,7 @@ import com.example.test.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import com.example.test.dto.LoginResponseDto;
 
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class AuthController {
 
     // 2. 로그인 (성공하면 토큰 줌)
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> params) {
+    public LoginResponseDto login(@RequestBody Map<String, String> params) {
         Member member = memberRepository.findByUsername(params.get("username"))
                 .orElseThrow(() -> new RuntimeException("없는 아이디다."));
 
@@ -40,7 +41,8 @@ public class AuthController {
             throw new RuntimeException("비밀번호 틀렸다.");
         }
 
+        String token = jwtUtil.generateToken(member.getUsername());
         // 출입증 발급!
-        return jwtUtil.generateToken(member.getUsername());
+        return new LoginResponseDto(token, member.getUsername(), member.getNickname());
     }
 }
