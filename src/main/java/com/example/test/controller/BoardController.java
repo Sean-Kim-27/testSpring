@@ -33,4 +33,11 @@ public class BoardController {
     public List<Board> getAllBoards() {
         return boardService.getAllBoards();
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetails userdetails) {
+        boardService.deleteBoard(id, userdetails.getUsername());
+
+        return "삭제했다. ";
+    }
 }
