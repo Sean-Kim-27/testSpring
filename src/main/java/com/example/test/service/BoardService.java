@@ -33,4 +33,15 @@ public class BoardService {
     public List<Board> getAllBoards() {
         return boardRepository.findAll();
     }
+
+    @Transactional
+    public void deleteBoard(Long id, String username) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("그런 글 없다."));
+
+        if (!board.getMember().getUsername().equals(username)) {
+            throw new RuntimeException("남의 글 지울라 하네 ㅋㅋ 뒤질라고");
+        }
+        boardRepository.delete(board);
+    }
 }
+
