@@ -23,10 +23,13 @@ public class BoardController {
                                         @AuthenticationPrincipal UserDetails userdetails) {
 
         String username = userdetails.getUsername();
+
         return boardService.createBoard(
                 params.get("title"),
                 params.get("content"),
                 username
+
+
         );
     }
 
