@@ -43,5 +43,15 @@ public class BoardService {
         }
         boardRepository.delete(board);
     }
+    @Transactional
+    public Board updateBoard(Long id, String title, String content, String username) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("글이 없는데 수정 어케함?"));
+        if (!board.getMember().getUsername().equals(username)) {
+            throw new RuntimeException("니꺼나 수정해라 다른 글에 똥싸지르지 말고");
+        }
+        board.update(title, content);
+        return board;
+    }
 }
 

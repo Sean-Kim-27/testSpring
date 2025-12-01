@@ -40,4 +40,12 @@ public class BoardController {
 
         return "삭제했다. ";
     }
+    @PutMapping("/{id}")
+    public Board updateBoard(@PathVariable Long id, @RequestBody Map<String, String> params,
+                             @AuthenticationPrincipal UserDetails userdetails) {
+        return boardService.updateBoard(id,
+                params.get("title"),
+                params.get("content"),
+                userdetails.getUsername());
+    }
 }
