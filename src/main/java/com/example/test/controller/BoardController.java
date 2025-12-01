@@ -1,5 +1,6 @@
 package com.example.test.controller;
 
+import com.example.test.dto.BoardResponseDto;
 import com.example.test.entity.Board;
 import com.example.test.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public Board createBoard(@RequestBody Map<String, String> params,
-                             @AuthenticationPrincipal UserDetails userdetails) {
+    public BoardResponseDto createBoard(@RequestBody Map<String, String> params,
+                                        @AuthenticationPrincipal UserDetails userdetails) {
 
         String username = userdetails.getUsername();
         return boardService.createBoard(
@@ -30,7 +31,7 @@ public class BoardController {
     }
 
     @GetMapping
-    public List<Board> getAllBoards() {
+    public List<BoardResponseDto> getAllBoards() {
         return boardService.getAllBoards();
     }
 
@@ -41,7 +42,7 @@ public class BoardController {
         return "삭제했다. ";
     }
     @PutMapping("/{id}")
-    public Board updateBoard(@PathVariable Long id, @RequestBody Map<String, String> params,
+    public BoardResponseDto updateBoard(@PathVariable Long id, @RequestBody Map<String, String> params,
                              @AuthenticationPrincipal UserDetails userdetails) {
         return boardService.updateBoard(id,
                 params.get("title"),
