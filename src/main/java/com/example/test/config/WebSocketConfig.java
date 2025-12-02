@@ -13,7 +13,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:3000","https://test-react-delta-woad.vercel.app")
+                .setAllowedOriginPatterns("http://localhost:3000",
+                        "https://test-react-delta-woad.vercel.app",
+                        "https://*.onrender.com")
+
                 .withSockJS(); //브라우저 호환성으로 인한 SockJS 사용
     }
     @Override
