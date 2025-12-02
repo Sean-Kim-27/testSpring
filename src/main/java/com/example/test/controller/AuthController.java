@@ -22,6 +22,14 @@ public class AuthController {
     // 1. 회원가입
     @PostMapping("/signup")
     public String signup(@RequestBody Map<String, String> params) {
+        String username = params.get("username");
+        String nickname = params.get("nickname");
+        if (memberRepository.existsByUsername(username)) {
+            throw new RuntimeException("중복 아이디다. 뒤지기 싫으면 다른 아이디 입력해라. ");
+        }
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new RuntimeException("중복 닉네임인데 혹시 다중인격 정신병 멘헤라 장애인이냐? 니 이름 적어 그냥 ㅋㅋ");
+        }
         Member member = Member.builder()
                 .username(params.get("username"))
                 .password(passwordEncoder.encode(params.get("password"))) // 암호화 필수!
