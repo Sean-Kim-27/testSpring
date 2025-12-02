@@ -30,6 +30,7 @@ public class BoardService {
                 .content(content)
                 .member(member)
                 .build();
+        boardRepository.save(board);
         return new BoardResponseDto(board);
     }
     //기존에는 List<Board>로 보드에 기입되어있는 모든 정보를 보냈음. 하지만 보안상 매우 좋지 않음
