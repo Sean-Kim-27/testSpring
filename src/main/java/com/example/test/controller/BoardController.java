@@ -24,16 +24,18 @@ public class BoardController {
     public BoardResponseDto createBoard(@RequestBody Map<String, String> params,
                                         @AuthenticationPrincipal UserDetails userdetails) {
 
-        String username = userdetails.getUsername();
-        // /topic/new-board 로 새 글이 올라왔다고 웹소켓을 통해 방송
-        messagingTemplate.convertAndSend("/topic/new-board", "REFRESH");
-        return boardService.createBoard(
+        BoardResponseDto newBoard = boardService.createBoard(
                 params.get("title"),
                 params.get("content"),
-                username
-
-
+                userdetails.getUsername()
         );
+        try {
+            messagingTemplate.convertAndSend("/topic/new-board", "REFRESH");
+        } catch (Exception e) {
+            // 에러 나면 로그만 찍고 넘어감 (글 쓰기는 성공 처리)
+            System.out.println("⚠️ 웹소켓 방송 실패 (근데 알빠임?): " + e.getMessage());
+        }
+        return newBoard;
     }
 
     @GetMapping
