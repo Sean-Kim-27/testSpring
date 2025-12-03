@@ -57,7 +57,7 @@ public class BoardService {
                 : null;
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("글 없는데?"));
-        boolean isLiked = boardLikeRepository.existsByBoardAndMember(board, member);
+        boolean isLiked = member != null && boardLikeRepository.existsByBoardAndMember(board, member);
         return new BoardResponseDto(board, isLiked);
     }
 
@@ -77,7 +77,7 @@ public class BoardService {
                 : null;
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("글이 없는데 수정 어케함?"));
-        boolean isLiked = boardLikeRepository.existsByBoardAndMember(board, member);
+        boolean isLiked = member != null && boardLikeRepository.existsByBoardAndMember(board, member);
         if (!board.getMember().getUsername().equals(username)) {
             throw new RuntimeException("니꺼나 수정해라 다른 글에 똥싸지르지 말고");
         }
