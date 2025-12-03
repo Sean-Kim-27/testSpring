@@ -3,6 +3,7 @@ package com.example.test.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -45,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll() // 로그인, 회원가입은 프리패스
                         .requestMatchers("/health").permitAll()
                         .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/boards/**").authenticated()
                         .requestMatchers("/api/boards/**").authenticated() // 게시판은 인증 필요
                         .anyRequest().permitAll() // 나머지는 일단 허용 (개발 편하게)
                 )
