@@ -30,9 +30,11 @@ public class Board {
 
     private LocalDateTime createdAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> likes = new ArrayList<>();
 
