@@ -1,7 +1,11 @@
 package com.example.test.service;
 
 import com.example.test.dto.BoardResponseDto;
+import com.example.test.entity.BoardLike;
+import com.example.test.entity.Comment;
 import com.example.test.entity.Member;
+import com.example.test.repository.BoardLikeRepository;
+import com.example.test.repository.CommentRepository;
 import com.example.test.repository.MemberRepository;
 import com.example.test.entity.Board;
 import com.example.test.repository.BoardRepository;
@@ -19,6 +23,8 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final BoardLikeRepository boardLikeRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public BoardResponseDto createBoard(String title, String content, String username) {
@@ -63,6 +69,31 @@ public class BoardService {
         }
         board.update(title, content);
         return new BoardResponseDto(board);
+    }
+
+    @Transactional
+    public void toggleLike(Long boardId, String username) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("글 없다."));
+        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사람 없다."));
+
+        if (boardLikeRepository.existsByBoardAndMember(board, member)) {
+            boardLikeRepository.deleteByBoardAndMember(board, member);
+        } else {
+            boardLikeRepository.save(BoardLike.builder().board(board).member(member).build());
+        }
+    }
+
+    @Transactional
+    public void createComment(Long boardId, String content, String username) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException("글 없다."));
+        Member member = memberRepository.findByUsername(username).orElseThrow(()-> new RuntimeException("사람 없다."));
+
+        Comment comment = Comment.builder()
+                .board(board)
+                .member(member)
+                .content(content)
+                .build();
+        commentRepository.save(comment);
     }
 }
 
