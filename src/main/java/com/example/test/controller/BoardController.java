@@ -1,6 +1,7 @@
 package com.example.test.controller;
 
 import com.example.test.dto.BoardResponseDto;
+import com.example.test.dto.CommentResponseDto;
 import com.example.test.entity.Board;
 import com.example.test.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,18 @@ public class BoardController {
             System.out.println("⚠️ 웹소켓 방송 실패 (근데 알빠임?): " + e.getMessage());
         }
         return newBoard;
+    }
+    @PostMapping("/{id}/like")
+    public String toggleLike(@PathVariable Long id, @AuthenticationPrincipal UserDetails userdetails) {
+        boardService.toggleLike(id, userdetails.getUsername());
+        return "개추 반영 ㅋㅋ";
+    }
+    @PostMapping("/{id}/comments")
+    public String createComment(@PathVariable Long id,
+                                @RequestBody Map<String, String> params,
+                                @AuthenticationPrincipal UserDetails userdetails) {
+        boardService.createComment(id, params.get("content"), userdetails.getUsername());
+        return "배설댓글 반영 ㅋㅋ";
     }
 
     @GetMapping

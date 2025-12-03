@@ -3,6 +3,9 @@ package com.example.test.dto;
 import com.example.test.entity.Board;
 import lombok.Getter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class BoardResponseDto {
@@ -12,6 +15,8 @@ public class BoardResponseDto {
     private String nickname;
     private String username;
     private LocalDateTime createdAt;
+    private int likeCount;
+    private List<CommentResponseDto> comments;
 
     public BoardResponseDto(Board board) {
         this.id = board.getId();
@@ -20,5 +25,9 @@ public class BoardResponseDto {
         this.nickname = board.getMember() != null ? board.getMember().getNickname() : "알 수 없음";
         this.username = board.getMember().getUsername();
         this.createdAt = board.getCreatedAt();
+        this.likeCount = board.getLikes().size();
+        this.comments = board.getComments().stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
