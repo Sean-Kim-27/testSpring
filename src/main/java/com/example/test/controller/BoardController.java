@@ -43,6 +43,12 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
+    @GetMapping("/{id}")
+    public BoardResponseDto getBoard(@PathVariable Long id) {
+        return boardService.getBoard(id);
+    }
+
+
     @DeleteMapping("/{id}")
     public String deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetails userdetails) {
         boardService.deleteBoard(id, userdetails.getUsername());
