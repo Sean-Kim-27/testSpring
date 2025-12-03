@@ -52,13 +52,15 @@ public class BoardController {
     }
 
     @GetMapping
-    public List<BoardResponseDto> getAllBoards() {
-        return boardService.getAllBoards();
+    public List<BoardResponseDto> getAllBoards(@AuthenticationPrincipal UserDetails userdetails) {
+        String username = (userdetails != null) ? userdetails.getUsername() : null;
+        return boardService.getAllBoards(username);
     }
 
     @GetMapping("/{id}")
-    public BoardResponseDto getBoard(@PathVariable Long id) {
-        return boardService.getBoard(id);
+    public BoardResponseDto getBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetails userdetails) {
+        String username = (userdetails != null) ? userdetails.getUsername() : null;
+        return boardService.getBoard(id, username);
     }
 
 
@@ -71,6 +73,7 @@ public class BoardController {
     @PutMapping("/{id}")
     public BoardResponseDto updateBoard(@PathVariable Long id, @RequestBody Map<String, String> params,
                              @AuthenticationPrincipal UserDetails userdetails) {
+
         return boardService.updateBoard(id,
                 params.get("title"),
                 params.get("content"),

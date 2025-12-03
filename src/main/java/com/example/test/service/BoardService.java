@@ -37,18 +37,28 @@ public class BoardService {
                 .member(member)
                 .build();
         boardRepository.save(board);
-        return new BoardResponseDto(board);
+        return new BoardResponseDto(board, false);
     }
     //기존에는 List<Board>로 보드에 기입되어있는 모든 정보를 보냈음. 하지만 보안상 매우 좋지 않음
     //따라서 Dto에 BoardResponseDto 클래스를 만들어, 멤버값의 닉네임만 꺼내와서 포장해서 보내도록 함.
-    public List<BoardResponseDto> getAllBoards() {
+    public List<BoardResponseDto> getAllBoards(String username) {
+        Member member = (username != null)
+                ? memberRepository.findByUsername(username).orElse(null)
+                : null;
         return boardRepository.findAll().stream()
-                .map(BoardResponseDto::new).collect(Collectors.toList());
+                .map(board -> {
+                    boolean isLiked = member != null && boardLikeRepository.existsByBoardAndMember(board, member);
+                    return new BoardResponseDto(board, isLiked);
+                }).collect(Collectors.toList());
     }
-    public BoardResponseDto getBoard(Long id) {
+    public BoardResponseDto getBoard(Long id, String username) {
+        Member member = (username != null)
+                ? memberRepository.findByUsername(username).orElse(null)
+                : null;
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("글 없는데?"));
-        return new BoardResponseDto(board);
+        boolean isLiked = boardLikeRepository.existsByBoardAndMember(board, member);
+        return new BoardResponseDto(board, isLiked);
     }
 
     @Transactional
@@ -62,13 +72,17 @@ public class BoardService {
     }
     @Transactional
     public BoardResponseDto updateBoard(Long id, String title, String content, String username) {
+        Member member = (username != null)
+                ? memberRepository.findByUsername(username).orElse(null)
+                : null;
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("글이 없는데 수정 어케함?"));
+        boolean isLiked = boardLikeRepository.existsByBoardAndMember(board, member);
         if (!board.getMember().getUsername().equals(username)) {
             throw new RuntimeException("니꺼나 수정해라 다른 글에 똥싸지르지 말고");
         }
         board.update(title, content);
-        return new BoardResponseDto(board);
+        return new BoardResponseDto(board, isLiked);
     }
 
     @Transactional
