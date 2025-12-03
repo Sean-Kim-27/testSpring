@@ -39,6 +39,11 @@ public class BoardService {
         return boardRepository.findAll().stream()
                 .map(BoardResponseDto::new).collect(Collectors.toList());
     }
+    public BoardResponseDto getBoard(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("글 없는데?"));
+        return new BoardResponseDto(board);
+    }
 
     @Transactional
     public void deleteBoard(Long id, String username) {
