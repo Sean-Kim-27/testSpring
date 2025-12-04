@@ -43,6 +43,11 @@ public class BoardController {
         boardService.toggleLike(id, userdetails.getUsername());
         return "개추 반영 ㅋㅋ";
     }
+    @PostMapping("/comments/{commentId}/like")
+    public String toggleCommentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetails userdetails) {
+        boardService.toggleCommentLike(commentId, userdetails.getUsername());
+        return "댓개추 반영 ㅋㅋ";
+    }
     @PostMapping("/{id}/comments")
     public String createComment(@PathVariable Long id,
                                 @RequestBody Map<String, String> params,

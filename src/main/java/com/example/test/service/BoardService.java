@@ -1,18 +1,14 @@
 package com.example.test.service;
 
 import com.example.test.dto.BoardResponseDto;
-import com.example.test.entity.BoardLike;
-import com.example.test.entity.Comment;
-import com.example.test.entity.Member;
-import com.example.test.repository.BoardLikeRepository;
-import com.example.test.repository.CommentRepository;
-import com.example.test.repository.MemberRepository;
-import com.example.test.entity.Board;
-import com.example.test.repository.BoardRepository;
+import com.example.test.dto.CommentResponseDto;
+import com.example.test.entity.*;
+import com.example.test.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +17,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class BoardService {
 
+    private final CommentLikeRepository commentLikeRepository;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final BoardLikeRepository boardLikeRepository;
@@ -37,7 +34,7 @@ public class BoardService {
                 .member(member)
                 .build();
         boardRepository.save(board);
-        return new BoardResponseDto(board, false);
+        return new BoardResponseDto(board, false, new ArrayList<>());
     }
     //기존에는 List<Board>로 보드에 기입되어있는 모든 정보를 보냈음. 하지만 보안상 매우 좋지 않음
     //따라서 Dto에 BoardResponseDto 클래스를 만들어, 멤버값의 닉네임만 꺼내와서 포장해서 보내도록 함.
@@ -48,9 +45,10 @@ public class BoardService {
         return boardRepository.findAll().stream()
                 .map(board -> {
                     boolean isLiked = member != null && boardLikeRepository.existsByBoardAndMember(board, member);
-                    return new BoardResponseDto(board, isLiked);
+                    return new BoardResponseDto(board, isLiked, new ArrayList<>());
                 }).collect(Collectors.toList());
     }
+
     public BoardResponseDto getBoard(Long id, String username) {
         Member member = (username != null)
                 ? memberRepository.findByUsername(username).orElse(null)
@@ -58,7 +56,12 @@ public class BoardService {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("글 없는데?"));
         boolean isLiked = member != null && boardLikeRepository.existsByBoardAndMember(board, member);
-        return new BoardResponseDto(board, isLiked);
+        List<CommentResponseDto> commentDtos = board.getComments().stream()
+                .map(comment -> {
+                    boolean isCommentLiked = member != null && commentLikeRepository.existsByCommentAndMember(comment, member);
+                    return new CommentResponseDto(comment, isCommentLiked);
+                }).collect(Collectors.toList());
+        return new BoardResponseDto(board, isLiked, commentDtos);
     }
 
     @Transactional
@@ -82,7 +85,24 @@ public class BoardService {
             throw new RuntimeException("니꺼나 수정해라 다른 글에 똥싸지르지 말고");
         }
         board.update(title, content);
-        return new BoardResponseDto(board, isLiked);
+        List<CommentResponseDto> commentDtos = board.getComments().stream()
+                .map(comment -> {
+                    boolean isCommentLiked = member != null && commentLikeRepository.existsByCommentAndMember(comment, member);
+                    return new CommentResponseDto(comment, isCommentLiked);
+                }).collect(Collectors.toList());
+
+        return new BoardResponseDto(board, isLiked, commentDtos);
+    }
+    @Transactional
+    public void toggleCommentLike(Long commentId, String username) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("댓글 없음"));
+        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사람 없음"));
+
+        if (commentLikeRepository.existsByCommentAndMember(comment, member)) {
+            commentLikeRepository.deleteByCommentAndMember(comment, member);
+        } else {
+            commentLikeRepository.save(CommentLike.builder().comment(comment).member(member).build());
+        }
     }
 
     @Transactional

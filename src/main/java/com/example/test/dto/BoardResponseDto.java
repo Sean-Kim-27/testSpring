@@ -18,8 +18,10 @@ public class BoardResponseDto {
     private int likeCount;
     private List<CommentResponseDto> comments;
     private boolean liked;
+    private int commentCount;
 
-    public BoardResponseDto(Board board, boolean liked) {
+
+    public BoardResponseDto(Board board, boolean liked, List<CommentResponseDto> commentDtos) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
@@ -28,8 +30,7 @@ public class BoardResponseDto {
         this.createdAt = board.getCreatedAt();
         this.likeCount = board.getLikes().size();
         this.liked = liked;
-        this.comments = board.getComments().stream()
-                .map(CommentResponseDto::new)
-                .collect(Collectors.toList());
+        this.comments = commentDtos;
+        this.commentCount = board.getComments().size();
     }
 }

@@ -2,6 +2,8 @@ package com.example.test.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -22,6 +24,10 @@ public class Comment {
     private Member member;
 
     private LocalDateTime createdAt;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> likes = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {this.createdAt = LocalDateTime.now();}
