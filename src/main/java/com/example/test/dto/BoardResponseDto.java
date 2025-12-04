@@ -18,6 +18,8 @@ public class BoardResponseDto {
     private int likeCount;
     private List<CommentResponseDto> comments;
     private boolean liked;
+    private int commentCount;
+
 
     public BoardResponseDto(Board board, boolean liked, List<CommentResponseDto> commentDtos) {
         this.id = board.getId();
@@ -29,6 +31,6 @@ public class BoardResponseDto {
         this.likeCount = board.getLikes().size();
         this.liked = liked;
         this.comments = commentDtos;
-        
+        this.commentCount = board.getComments().size();
     }
 }
