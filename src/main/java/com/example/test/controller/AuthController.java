@@ -30,6 +30,9 @@ public class AuthController {
         if (memberRepository.existsByNickname(nickname)) {
             throw new RuntimeException("중복 닉네임인데 혹시 다중인격 정신병 멘헤라 장애인이냐? 니 이름 적어 그냥 ㅋㅋ");
         }
+        if (nickname.length() > 16) {
+            throw new RuntimeException("님아 너무 긴데 16글자로만 하시죠? ㅋㅋ");
+        }
         Member member = Member.builder()
                 .username(params.get("username"))
                 .password(passwordEncoder.encode(params.get("password"))) // 암호화 필수!
