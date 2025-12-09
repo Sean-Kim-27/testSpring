@@ -4,6 +4,9 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      data-sourceproperties:
+        prepareThreshold: 0
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,6 +14,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_batch_fetch_size: 100
+        format_sql: false
 supabase:
   url: https://pcwbndmvzvzbthdxqmhf.supabase.co
   key: ${DB_KEY}
