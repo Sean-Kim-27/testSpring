@@ -4,11 +4,13 @@ import com.example.test.dto.BoardResponseDto;
 import com.example.test.dto.CommentResponseDto;
 import com.example.test.entity.Board;
 import com.example.test.service.BoardService;
+import com.example.test.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Map;
 public class BoardController {
     private final BoardService boardService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final ImageService imageService;
 
     @PostMapping
     public BoardResponseDto createBoard(@RequestBody Map<String, String> params,
@@ -28,6 +31,7 @@ public class BoardController {
         BoardResponseDto newBoard = boardService.createBoard(
                 params.get("title"),
                 params.get("content"),
+                params.get("imageUrl"),
                 userdetails.getUsername()
         );
         try {
@@ -37,6 +41,12 @@ public class BoardController {
             System.out.println("⚠️ 웹소켓 방송 실패 (근데 알빠임?): " + e.getMessage());
         }
         return newBoard;
+    }
+    @PostMapping("/upload")
+    public String uploadImage(@RequestParam("file") MultipartFile file,
+                              @AuthenticationPrincipal UserDetails userdetails) {
+        if(file.isEmpty()) throw new RuntimeException("파일 비었네");
+        return imageService.uploadImage(file);
     }
     @PostMapping("/{id}/like")
     public String toggleLike(@PathVariable Long id, @AuthenticationPrincipal UserDetails userdetails) {
