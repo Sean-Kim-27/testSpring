@@ -11,6 +11,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+supabase:
+  url: https://pcwbndmvzvzbthdxqmhf.supabase.co
+  key: ${DB_KEY}
+  bucket: images
 
 jwt:
   # 환경변수 JWT_SECRET_KEY가 있으면 그거 쓰고, 없으면 뒤에 있는 기본값(로컬용)

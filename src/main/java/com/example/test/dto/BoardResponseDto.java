@@ -19,12 +19,14 @@ public class BoardResponseDto {
     private List<CommentResponseDto> comments;
     private boolean liked;
     private int commentCount;
+    private String imageUrl;
 
 
     public BoardResponseDto(Board board, boolean liked, List<CommentResponseDto> commentDtos) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
+        this.imageUrl = board.getImageUrl();
         this.nickname = board.getMember() != null ? board.getMember().getNickname() : "알 수 없음";
         this.username = board.getMember().getUsername();
         this.createdAt = board.getCreatedAt();

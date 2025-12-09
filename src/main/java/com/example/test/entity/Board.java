@@ -38,6 +38,8 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> likes = new ArrayList<>();
 
+    private String imageUrl;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();

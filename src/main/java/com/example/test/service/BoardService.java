@@ -24,7 +24,7 @@ public class BoardService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public BoardResponseDto createBoard(String title, String content, String username) {
+    public BoardResponseDto createBoard(String title, String content, String imageUrl, String username) {
 
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("그런 사람 없다 회원가입부터 해 씨발 ㅋㅋ"));
@@ -32,6 +32,7 @@ public class BoardService {
                 .title(title)
                 .content(content)
                 .member(member)
+                .imageUrl(imageUrl)
                 .build();
         boardRepository.save(board);
         return new BoardResponseDto(board, false, new ArrayList<>());
