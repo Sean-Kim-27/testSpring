@@ -22,6 +22,7 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final BoardLikeRepository boardLikeRepository;
     private final CommentRepository commentRepository;
+    private final ImageService imageService;
 
     @Transactional
     public BoardResponseDto createBoard(String title, String content, String imageUrl, String username) {
@@ -71,6 +72,10 @@ public class BoardService {
 
         if (!board.getMember().getUsername().equals(username)) {
             throw new RuntimeException("남의 글 지울라 하네 ㅋㅋ 뒤질라고");
+        }
+        //이미지 삭제
+        if (board.getImageUrl() != null) {
+            imageService.deleteImage(board.getImageUrl());
         }
         boardRepository.delete(board);
     }

@@ -43,4 +43,22 @@ public class ImageService {
         }
 
     }
+
+    public void deleteImage(String imageUrl) {
+        if(imageUrl == null) { return; }
+
+        try {
+            String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+
+            String url = supabaseUrl + "/storage/v1/object/" + bucketName + "/" + fileName;
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + supabaseKey);
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+            System.out.println("이미지 삭제 완료 : " + fileName);
+        } catch (Exception e) {
+            System.err.println("이미지 삭제 실패 (응 무시해) : " + e.getMessage());
+        }
+    }
 }
