@@ -31,7 +31,7 @@ public class SecurityConfig {
                 // 2. CORS 설정 (프론트엔드에서 요청 오면 허용)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:3000", "https://test-react-delta-woad.vercel.app/"));
+                    config.setAllowedOrigins(List.of("http://localhost:3000", "https://test-react-delta-woad.vercel.app/", "https://knut-inside.vercel.app/"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);
