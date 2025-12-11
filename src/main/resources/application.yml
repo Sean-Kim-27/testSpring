@@ -5,8 +5,9 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      data-sourceproperties:
+      data-source-properties:
         prepareThreshold: 0
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,7 +18,7 @@ spring:
         default_batch_fetch_size: 100
         format_sql: false
 supabase:
-  url: https://pcwbndmvzvzbthdxqmhf.supabase.co
+  url: https://rtntetaxisoyndcbxzas.supabase.co
   key: ${DB_KEY}
   bucket: images
 
