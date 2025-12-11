@@ -26,6 +26,7 @@ public class ImageService {
             String url = supabaseUrl + "/storage/v1/object/" + bucketName + "/" + fileName;
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + supabaseKey);
+
             headers.setContentType(MediaType.parseMediaType(file.getContentType()));
 
             RestTemplate restTemplate = new RestTemplate();
